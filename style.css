@@ -1,0 +1,66 @@
+/* 💅 Main Page Style */
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #f4f7fb;
+  margin: 0;
+  padding: 30px;
+}
+
+/* 📦 Container */
+.container {
+  max-width: 800px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* 🖊 Title */
+h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+/* 🔖 Labels */
+label {
+  font-weight: bold;
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 6px;
+}
+
+/* 🔽 Dropdowns */
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+/* 📥 Resolution display box */
+.resolution-box {
+  background: #e9f5ff;
+  padding: 25px;
+  margin-top: 30px;
+  border-left: 6px solid #4a90e2;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* 📌 Title in resolution box */
+.resolution-box h3 {
+  margin-top: 0;
+  color: #1f3b57;
+}
+
+/* 💡 Developer Notes Section */
+.dev-help {
+  margin-top: 40px;
+  background: #fffbe6;
+  padding: 20px;
+  border-left: 6px solid #ffd60a;
+  border-radius: 10px;
+}

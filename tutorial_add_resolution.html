@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>📘 Tutorial: How to Add a Resolution</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 40px;
+      background-color: #f4f8fb;
+      line-height: 1.6;
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    pre, code {
+      background: #eef1f5;
+      padding: 10px;
+      display: block;
+      border-left: 4px solid #3498db;
+      margin: 10px 0;
+    }
+    .note {
+      background: #fff8e1;
+      padding: 10px;
+      border-left: 4px solid #ffca28;
+    }
+    .tip {
+      background: #e8f5e9;
+      padding: 10px;
+      border-left: 4px solid #66bb6a;
+    }
+    .step {
+      background: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+  <h1>📘 Step-by-Step Tutorial: Adding a New Resolution</h1>
+
+  <div class="step">
+    <h2>🔹 Step 1: Understand the Flow</h2>
+    <p>Each resolution is triggered based on 5 dropdowns:</p>
+    <ol>
+      <li>Requestor</li>
+      <li>Category</li>
+      <li>Concern</li>
+      <li>Sub-Concern</li>
+      <li>Condition 2 (Specific state)</li>
+    </ol>
+    <p>These combine to create a resolution key:</p>
+    <code>requestor_category_concern_subconcern_condition2</code>
+  </div>
+
+  <div class="step">
+    <h2>🔹 Step 2: Update Dropdown Options</h2>
+    <p>In your HTML, find this section in the &lt;script&gt;:</p>
+
+    <h3>A. Add to categoryMap:</h3>
+    <pre><code>const categoryMap = {
+  "owner": ["listing", "product", "booking"],
+  "member": ["member_account", "booking"]
+};</code></pre>
+
+    <h3>B. Add to concernMap:</h3>
+    <pre><code>const concernMap = {
+  "product": ["billing", "cancel"]
+};</code></pre>
+
+    <h3>C. Add to subConcernMap:</h3>
+    <pre><code>const subConcernMap = {
+  "billing": ["refund", "payment_issue"]
+};</code></pre>
+
+    <h3>D. Add to condition2Map:</h3>
+    <pre><code>const condition2Map = {
+  "refund": ["credit_card", "paypal"]
+};</code></pre>
+  </div>
+
+  <div class="step">
+    <h2>🔹 Step 3: Add the Resolution</h2>
+    <p>Scroll to the <code>resolutions</code> section:</p>
+    <pre><code>const resolutions = {
+  "owner_product_billing_refund_credit_card": `
+    &lt;strong&gt;Resolution:&lt;/strong&gt;&lt;br&gt;&lt;br&gt;
+    💳 Inform the customer that credit card refunds take 3–5 business days.&lt;br&gt;
+    Verify charge ID and status in account center.&lt;br&gt;&lt;br&gt;
+
+    📩 &lt;b&gt;Email Template:&lt;/b&gt; &lt;span id="emailTemplate2"&gt;Product_Billing_CreditCard_Refund&lt;/span&gt;
+    &lt;button onclick="copyText('emailTemplate2')"&gt;📋 Copy&lt;/button&gt;&lt;br&gt;
+
+    📚 &lt;b&gt;KB Article:&lt;/b&gt; &lt;span id="kbLink2"&gt;Billing & Refund Policy&lt;/span&gt;
+    &lt;button onclick="copyText('kbLink2')"&gt;📋 Copy&lt;/button&gt;&lt;br&gt;
+
+    🗂 &lt;b&gt;Related Cases:&lt;/b&gt; 1100101, 1100456
+  `
+};</code></pre>
+  </div>
+
+  <div class="step">
+    <h2>💡 Tips</h2>
+    <div class="tip">
+      ✅ <strong>Keep your keys consistent.</strong><br>
+      Use lowercase and underscore `_` between each word.<br><br>
+      Example: <code>owner_product_billing_refund_credit_card</code>
+    </div>
+
+    <div class="note">
+      📝 <strong>Note:</strong><br>
+      You do not need to modify any HTML layout—just work inside the JavaScript area.
+    </div>
+  </div>
+
+</body>
+</html>
