@@ -1,100 +1,158 @@
-alert("✅ JS file is working!");
-
-// ✅ Maps categories to available concerns
-const concernMap = {
-  listing: ["Verification", "Update Business Information", "Report Ownership Change"],
-  product: ["Interested in Purchasing", "Billing", "Cancel Subscription"],
-  booking: ["Confirmation Email", "Cancel Booking", "Booking Status"],
-  member_account: ["Forgot Password", "Update Info", "Merge Account"]
+// 🌳 Initialize global tree with only dropdown structure (without resolution)
+const tree = {
+  owner: {
+    listing: {
+      verification: {
+        "how to verify": {
+          "owner registered not verified": {
+            "not verified": {} // Will fetch file from GitHub
+          }
+        }
+      },
+      "ownership change": {},
+      photos: {},
+      awards: {},
+      duplicate: {},
+      "update business information": {}
+    },
+    awards: {},
+    reviews: {},
+    "management center": {},
+    booking: {},
+    "vacation rental": {}
+  },
+  member: {
+    reviews: {
+      report: {}
+    },
+    "member account": {},
+    listing: {},
+    community: {}
+  },
+  unregistered: {}
 };
 
-// ✅ Maps concerns to sub-concerns (Make sure concern names match concernMap exactly)
-const subConcernMap = {
-  "Verification": ["Owner Registered - Not Verified", "Identity Check", "Owner Disabled"],
-  "Update Business Information": ["Name Update", "Contact Update", "Category Correction"],
-  "Report Ownership Change": ["Business Sold", "Business Closed"],
-  "Interested in Purchasing": ["Business Advantage", "Premium Plan"],
-  "Billing": ["Refund", "Failed Transaction"],
-  "Cancel Subscription": ["Auto Renewal", "Manual Cancellation"],
-  "Confirmation Email": ["Not Received", "Wrong Email"],
-  "Cancel Booking": ["Duplicate", "Customer Request"],
-  "Booking Status": ["Pending", "Confirmed"],
-  "Forgot Password": ["Reset Link", "Not Receiving Email"],
-  "Update Info": ["Change Email", "Change Name"],
-  "Merge Account": ["Same Email", "Different Email"]
-};
+// 🌐 DOM Elements
+const requestorSelect = document.getElementById("requestor");
+const dynamicFields = document.getElementById("dynamicFields");
+const resolutionBox = document.getElementById("resolutionContainer");
+const instructionOutput = document.getElementById("instructionText");
+const emailOutput = document.getElementById("emailTemplate");
+const kbOutput = document.getElementById("kbLink");
+const relatedCasesList = document.getElementById("relatedCasesList");
 
-// ✅ Reset child dropdowns when a parent changes
-function resetBelow(level) {
-  if (level === "requestor" || level === "category") {
-    document.getElementById("concern").innerHTML = "<option value=''>-- Select --</option>";
-    document.getElementById("subconcern").innerHTML = "<option value=''>-- Select --</option>";
-    document.getElementById("resolutionContainer").innerHTML = "";
-  }
-  if (level === "concern") {
-    document.getElementById("subconcern").innerHTML = "<option value=''>-- Select --</option>";
-    document.getElementById("resolutionContainer").innerHTML = "";
+// 🧠 Capitalize each word in a string
+function capitalize(text) {
+  return text
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+// 🧹 Clear all dynamic fields and hide resolution box
+function clearDynamicFields() {
+  dynamicFields.innerHTML = "";
+  resolutionBox.classList.add("hidden");
+}
+
+// 📦 Show resolution details in the UI
+function showResolution(resolution) {
+  resolutionBox.classList.remove("hidden");
+
+  instructionOutput.textContent = resolution.instruction || "—";
+  emailOutput.textContent = resolution.emailTemplate || "—";
+  kbOutput.textContent = resolution.kb || "—";
+
+  relatedCasesList.innerHTML = "";
+  (resolution.relatedCases || []).forEach(caseId => {
+    const li = document.createElement("li");
+    li.textContent = caseId;
+    relatedCasesList.appendChild(li);
+  });
+}
+
+// 🌍 Fetch resolution JSON file from GitHub
+async function showResolutionFromFile(pathArray) {
+  const filename = pathArray.join("_").replace(/\s+/g, "_") + ".json";
+  const url = `https://raw.githubusercontent.com/your-username/your-repo/main/resolutions/${filename}`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("File not found");
+
+    const resolution = await response.json();
+    showResolution(resolution);
+  } catch (err) {
+    console.error("Error loading resolution:", err);
+    alert("Resolution not available for this path.");
   }
 }
 
-// ✅ Populate the concern dropdown based on category
-function updateConcernOptions() {
-  const category = document.getElementById("category").value;
-  const concernSelect = document.getElementById("concern");
+// 🎯 Create a dropdown and handle its change
+function createDropdown(labelText, options, levelPath) {
+  const wrapper = document.createElement("div");
 
-  concernSelect.innerHTML = "<option value=''>-- Select --</option>";
+  const label = document.createElement("label");
+  label.textContent = labelText;
+  wrapper.appendChild(label);
 
-  if (concernMap[category]) {
-    concernMap[category].forEach((concern) => {
-      const option = document.createElement("option");
-      option.value = concern;
-      option.textContent = concern;
-      concernSelect.appendChild(option);
-    });
+  const select = document.createElement("select");
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = `Select ${labelText}`;
+  select.appendChild(defaultOption);
+
+  for (const key of Object.keys(options)) {
+    const option = document.createElement("option");
+    option.value = key;
+    option.textContent = capitalize(key);
+    select.appendChild(option);
   }
+
+  select.addEventListener("change", () => {
+    // Clear dropdowns below current
+    while (wrapper.nextSibling) {
+      dynamicFields.removeChild(wrapper.nextSibling);
+    }
+
+    const selectedValue = select.value;
+    if (!selectedValue) return;
+
+    const newPath = [...levelPath, selectedValue];
+
+    let pointer = tree;
+    for (const key of newPath) {
+      pointer = pointer?.[key];
+    }
+
+    if (!pointer || Object.keys(pointer).length === 0) {
+      showResolutionFromFile(newPath);
+    } else if (typeof pointer === "object") {
+      let label = levelPath.length === 0 ? "Category" : `Reason ${levelPath.length}`;
+      const dropdown = createDropdown(label, pointer, newPath);
+      dynamicFields.appendChild(dropdown);
+    }
+  });
+
+  wrapper.appendChild(select);
+  return wrapper;
 }
 
-// ✅ Populate sub-concern dropdown based on selected concern
-function updateSubConcernOptions() {
-  const concern = document.getElementById("concern").value.trim();
-  const subSelect = document.getElementById("subconcern");
+// 🚦 Handle initial dropdown (Requestor)
+requestorSelect.addEventListener("change", () => {
+  clearDynamicFields();
+  const selected = requestorSelect.value;
+  if (!selected || !tree[selected]) return;
 
-  subSelect.innerHTML = "<option value=''>-- Select --</option>";
+  const next = tree[selected];
+  const dropdown = createDropdown("Category", next, [selected]);
+  dynamicFields.appendChild(dropdown);
+});
 
-  console.log("Fetching subconcerns for:", concern); // Debugging
-
-  if (subConcernMap[concern]) {
-    subConcernMap[concern].forEach((sub) => {
-      const option = document.createElement("option");
-      option.value = sub;
-      option.textContent = sub;
-      subSelect.appendChild(option);
-    });
-  }
-}
-
-// ✅ Load resolution HTML based on dropdown path
-function loadResolution() {
-  const category = document.getElementById("category").value.trim();
-  const concern = document.getElementById("concern").value.trim();
-  const sub = document.getElementById("subconcern").value.trim();
-
-  if (!category || !concern || !sub) return;
-
-  const filePath = `Resolution_DB/${category}/${concern}/${sub}.html`;
-
-  console.log("Trying to fetch:", filePath); // Debug path
-
-  fetch(filePath)
-    .then((res) => {
-      if (!res.ok) throw new Error("Resolution not found");
-      return res.text();
-    })
-    .then((html) => {
-      document.getElementById("resolutionContainer").innerHTML = html;
-    })
-    .catch(() => {
-      document.getElementById("resolutionContainer").innerHTML =
-        "<p style='color:red;'>❌ No resolution found for this path.</p>";
-    });
+// 📋 Copy to clipboard function
+function copyText(id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Copied to clipboard!");
+  });
 }
