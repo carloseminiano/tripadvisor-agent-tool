@@ -1,61 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Tripadvisor Agent Tool</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="container">
-    <h2>Tripadvisor Agent Resolution Tool</h2>
+<div class="container">
+  <header>
+    <!-- 🔹 Logo -->
+    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7b/Tripadvisor_Logo_2020.svg/320px-Tripadvisor_Logo_2020.svg.png" alt="Tripadvisor Logo" class="logo" />
 
-    <!-- Requestor -->
-    <label for="requestor">Requestor Type</label>
-    <select id="requestor" onchange="resetBelow('requestor')">
-      <option value="">-- Select --</option>
+    <!-- 🔹 Theme Toggle Button -->
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+  </header>
+
+  <!-- 🔍 Search Bar -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search..." />
+    <button onclick="handleSearch()">Search</button>
+  </div>
+
+  <form>
+    <h1>Tripadvisor Agent Tool</h1>
+
+    <!-- 🔹 Requestor Dropdown -->
+    <label for="requestor">Requestor</label>
+    <select id="requestor">
+      <option value="">Select Requestor</option>
       <option value="owner">Owner</option>
       <option value="member">Member</option>
       <option value="unregistered">Unregistered</option>
     </select>
 
-    <!-- Category -->
-    <label for="category">Category</label>
-    <select id="category" onchange="updateConcernOptions(); resetBelow('category')">
-      <option value="">-- Select --</option>
-      <option value="listing">Listing</option>
-      <option value="product">Product</option>
-      <option value="booking">Booking</option>
-      <option value="member_account">Member Account</option>
-    </select>
+    <!-- 🔹 Dynamic Dropdowns -->
+    <div id="dynamicFields"></div>
 
-    <!-- Concern -->
-    <label for="concern">Concern</label>
-    <select id="concern" onchange="updateSubConcernOptions(); resetBelow('concern')">
-      <option value="">-- Select --</option>
-    </select>
+    <!-- 🔹 Resolution Section -->
+    <div id="resolutionContainer" class="hidden">
+      <h2>Resolution</h2>
 
-    <!-- Sub-Concern -->
-    <label for="subconcern">Sub-Concern</label>
-    <select id="category" onchange="updateConcernOptions(); resetBelow('category')">
-      <option value="">-- Select --</option>
-    </select>
+      <p><strong>Instruction:</strong></p>
+      <div class="copy-block">
+        <p id="instructionText" class="copy-text"></p>
+      </div>
 
-    <!-- Resolution Result -->
-    <div id="resolutionContainer" style="margin-top: 30px;"></div>
+      <p><strong>Email Template:</strong></p>
+      <div class="copy-block">
+        <p id="emailTemplate" class="copy-text"></p>
+        <button type="button" onclick="copyText('emailTemplate')">Copy Email</button>
+      </div>
 
-    <!-- Developer Guide -->
-    <div class="dev-help">
-      <h3>🛠 How to Add More Cases</h3>
-      <ol>
-        <li>Edit <code>script.js</code> to add new categories, concerns, sub-concerns</li>
-        <li>Create resolution HTML file in: <br>
-            <code>Resolution_DB/category/concern/subconcern.html</code>
-        </li>
-        <li>All names must match exactly (capitalization, spaces)</li>
-      </ol>
+      <p><strong>KB Article:</strong></p>
+      <div class="copy-block">
+        <p id="kbLink" class="copy-text"></p>
+        <button type="button" onclick="copyText('kbLink')">Copy KB</button>
+      </div>
+
+      <p><strong>Related Cases:</strong></p>
+      <ul id="relatedCasesList"></ul>
     </div>
-  </div>
-  <!-- JavaScript -->
-  <script src="script.js"></script>
-</body>
-</html>
+  </form>
+</div>
