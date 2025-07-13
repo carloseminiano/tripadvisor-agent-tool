@@ -56,9 +56,45 @@ header {
 .theme-toggle {
   background: none;
   border: none;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   cursor: pointer;
   color: var(--text-color);
+}
+
+/* 🔍 Search Bar */
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.search-container input {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  font-size: 1rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-container button {
+  padding: 0.75rem 1.2rem;
+  border-radius: 10px;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: 0.3s;
+}
+
+.search-container button:hover {
+  opacity: 0.9;
 }
 
 form {
@@ -68,19 +104,18 @@ form {
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
   transition: all 0.3s ease;
 }
 
 form h1 {
   text-align: center;
   font-size: 1.5rem;
-  margin-bottom: 1rem;
 }
 
 label {
   font-weight: 600;
-  margin-top: 1rem;
+  margin-bottom: 0.4rem;
 }
 
 select {
@@ -91,6 +126,7 @@ select {
   background-color: var(--input-bg);
   font-size: 1rem;
   color: var(--text-color);
+  margin-bottom: 1rem;
 }
 
 select:focus {
@@ -115,10 +151,8 @@ select:focus {
   border-radius: 8px;
   font-size: 0.95rem;
   word-wrap: break-word;
-  word-break: break-word;        /* ✅ allow long words to break */
-  overflow-wrap: anywhere;       /* ✅ break long single strings like emails */
-  max-width: 100%;               /* ✅ don't exceed container */
   overflow-x: auto;
+  max-width: 100%;
 }
 
 button {
@@ -140,7 +174,7 @@ button:hover {
 #resolutionContainer {
   margin-top: 2rem;
   background-color: var(--input-bg);
-  padding: 1.2rem;
+  padding: 1.5rem;
   border-radius: 12px;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
@@ -161,11 +195,6 @@ ul li {
   margin-bottom: 0.3rem;
 }
 
-/* Spacing between dynamically added dropdowns */
-#dynamicFields > div {
-  margin-top: 1rem;
-}
-
 /* Responsive */
 @media (max-width: 600px) {
   form {
@@ -177,10 +206,6 @@ ul li {
     align-items: stretch;
   }
 
-  .copy-text {
-    font-size: 0.9rem;
-  }
-
   .theme-toggle {
     font-size: 1.2rem;
   }
@@ -190,6 +215,11 @@ ul li {
   }
 
   button {
+    width: 100%;
+  }
+
+  .search-container input,
+  .search-container button {
     width: 100%;
   }
 }
